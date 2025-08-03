@@ -1,0 +1,29 @@
+{% extends 'partials/base.html' %}
+{% block title %}Register Page{% endblock %}
+{% load crispy_forms_tags %}
+{% load socialaccount %}
+
+{% block content %}
+<div class="container">
+    <div class="row my-4">
+        <div class="col-md-6 offset-md-3">
+            <div class="card">
+                <div class="card-header text-center bg-dark">
+                    <h4>Register Page</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <button class="btn btn-success btn-block" type="submit">Register</button>
+                    </form>
+                    <hr>
+                    <a href="{% provider_login_url 'google' %}" class="btn btn-danger btn-block mt-2">
+                        <i class="fab fa-google"></i> Sign in with Google
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

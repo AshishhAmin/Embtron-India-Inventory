@@ -1,0 +1,50 @@
+{% extends 'partials/base.html' %}
+{% block title %}Profile Page{% endblock %}
+{% load crispy_forms_tags %}
+
+{% block content%}
+<!--Table-->
+<div class="container">
+    <div class="row my-4 justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h5 class="text-center">Profile Update</h5>
+                            <hr>
+                            <form method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                {{ user_form|crispy }}
+                                {{ profile_form|crispy }}
+                                <div class="text-center">
+                                    <input class="btn btn-info" style="background-color: rgb(22, 28, 77);" type="submit" value="Update">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .container {
+        max-width: 800px; /* Set a max width for the container */
+        margin: auto; /* Center the container */
+    }
+    .card {
+        border-radius: 10px; /* Rounded corners for the card */
+    }
+    .card-header {
+        border-bottom: 2px solid #007bff; /* A bottom border for the header */
+    }
+    .btn-info {
+        width: 100%; /* Make the button full width */
+        padding: 10px; /* Add padding for a better look */
+    }
+</style>
+
+{% endblock %}

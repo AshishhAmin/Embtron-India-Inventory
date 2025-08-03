@@ -1,0 +1,46 @@
+
+<!-- Topside -->
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card" style="margin-top: -10px;width: 1150px;height: auto;text-align: center;margin-left: -12px;background-color:white;";>
+                <div class="card-header text-white" style="background-color: rgb(22, 28, 77);;">
+                   <h4>Actions</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <!-- Staff -->
+                        <div class="col-md-4">
+                            <a class="text-decoration-none text-dark" href="{% url 'dashboard-staff' %}">
+                                <div class="card my-card shadow text-center p-3" style="background-color: rgb(22, 28, 77);;">
+                                    <h4 style="color: white;">Staff <i class="fas fa-users"></i></h4>
+                                    <h3 style="color: white;">{{ workers_count }}</h3>
+                                </div>
+                            </a>
+                        </div>
+                        <!-- Products -->
+                        <div class="col-md-4">
+                            <a class="text-decoration-none text-dark" href="{% url 'dashboard-product' %}">
+                                <div class="card my-card shadow text-center p-3" style="background-color: rgb(22, 28, 77);;">
+                                    <h4 style="color: white;">Products <i class="fas fa-box"></i></h4>
+                                    <h3 style="color: white;">{{ product_count }}</h3>
+                                </div>
+                            </a>
+                        </div>
+                        <!-- Orders -->
+                        <div class="col-md-4">
+                            <a class="text-decoration-none text-dark" href="{% url 'dashboard-order' %}">
+                                <div class="card my-card shadow text-center p-3" style="background-color: rgb(22, 28, 77);;">
+
+                                    <h4 style="color: white;">Orders <i class="fas fa-shipping-fast"></i></h4>
+                                    <h3 style="color: white;">{{ orders_count }}</h3>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Topside -->

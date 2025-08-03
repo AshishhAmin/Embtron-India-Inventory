@@ -1,0 +1,100 @@
+
+.my-card:hover{
+    transform: scale(1.1);
+    transition: 0.2s ease-in-out;
+}
+/* styles.css */
+body {
+    background-color: #e2e6eb; /* Light background color */
+     /* Use the correct path to your image */    font-family: 'Roboto', sans-serif; /* Change font */
+    color: #333; /* Dark text color for better readability */
+}
+
+.container {
+    max-width: 1200px; /* Set a max width for the container */
+    margin: auto; /* Center the container */
+    padding: 20px; /* Add padding */
+}
+
+.card {
+    border-radius: 10px; /* Rounded corners for the card */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow */
+    margin-bottom: 20px; /* Space between cards */
+}
+
+.card-header {
+    background-color: #134dfa; /* Change header color */
+    color: white; /* White text for header */
+    padding: 15px; /* Add padding */
+}
+
+.btn {
+    border-radius: 5px; /* Rounded buttons */
+    padding: 10px 15px; /* Padding for buttons */
+}
+
+.btn-info {
+    background-color: #17a2b8; /* Info button color */
+    border: none; /* Remove border */
+}
+
+.btn-success {
+    background-color: #28a745; /* Success button color */
+    border: none; /* Remove border */
+}
+
+/* Add hover effects */
+.btn:hover {
+    opacity: 0.8; /* Slightly fade on hover */
+}
+
+table {
+    width: 100%; /* Full width for tables */
+    border-collapse: collapse; /* Collapse borders */
+}
+
+th, td {
+    padding: 12px; /* Padding for table cells */
+    border: 1px solid #ddd; /* Border for table cells */
+}
+
+th {
+    background-color: #0c0f11; /* Header background color */
+    color: rgb(250, 243, 243); /* Header text color */
+}
+
+.fade-out {
+    animation: fadeOut 0.5s forwards;
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.login-card {
+    transition: transform 0.3s cubic-bezier(.4,2,.6,1), box-shadow 0.3s;
+}
+
+.login-card:hover {
+    transform: scale(1.04);
+    background-color: aliceblue;
+    
+}

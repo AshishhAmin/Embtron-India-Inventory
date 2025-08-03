@@ -1,0 +1,60 @@
+{% extends 'partials/base.html' %}
+{% block title %} Product page{% endblock %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+{% include 'partials/topnav.html' %}
+<!--Table-->
+<div class="container">
+    <div class="row my-4">
+        <div class="col-md-4 col-sm-14">
+            <div class="border bg-white p-3" style="margin-top: -70px; border-radius: 30px;"> <!-- Adjust margin-top as needed -->
+                <h4>Add Products</h4>
+                <hr>
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <input class="btn btn-success btn-block" type="submit" value="Add Product">
+                </form>
+                <a href="{% url 'dashboard-product-import' %}" class="btn btn-primary btn-block mt-3">Import Products from CSV</a>
+            </div> 
+        </div>
+        <div class="col-md-8 col-sm-12" style="margin-top: -20px;border-radius: 30px;"> <!-- Added col-sm-12 for smaller screens -->
+            <div class="table-responsive" style="max-height: 300px; overflow-y: auto;border-radius: 30px;">
+                <table class="table bg-white"style="border-radius: 30px;">
+                    <thead class="bg-info">
+                        <tr class="text-white">
+                            <th scope="col" style="background-color: rgb(22, 28, 77);;">Name</th>
+                            <th scope="col" style="background-color: rgb(22, 28, 77);;">Category</th>
+                            <th scope="col" style="background-color: rgb(22, 28, 77);;">Quantity</th>
+                            <th scope="col" style="background-color: rgb(22, 28, 77);;">Price</th>
+                            <th scope="col" style="background-color: rgb(22, 28, 77);;">Location ID</th> <!-- Added -->
+                            <th scope="col" style="background-color: rgb(22, 28, 77);;">Activity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                        <tr>
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.category }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>₹{{ item.price }}</td>
+                            <td>{{ item.location_id }}</td> <!-- Added -->
+                            <td>
+                                <a class="btn btn-info btn-sm" href="{% url 'dashboard-product-update' item.id %}">Edit</a>
+                                <a class="btn btn-danger btn-sm" href="{% url 'dashboard-product-delete' item.id %}">Delete</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--End Table-->
+{% endblock %}

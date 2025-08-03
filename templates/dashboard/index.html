@@ -1,0 +1,95 @@
+{% extends 'partials/base.html' %}
+{% block title %} Home page{% endblock %}
+
+{%block content%}
+{% if user.is_authenticated and user.is_staff and user.is_superuser %}
+{% include 'partials/topnav.html' %}
+   <!--Graphs-->
+
+    <div class="container my-4">
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="bg-white p-3 rounded shadow pie-div">
+                    <h5 class="text-center">Product Sales</h5>
+                    <canvas id="salesPieChart"></canvas>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="bg-white p-3 rounded shadow chart-div">
+                    <h5 class="text-center">Product Quantity</h5>
+                    <canvas id="quantityBarChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Prepare data from Django context
+        const productNames = [{% for product in products %}'{{ product.name }}'{% if not forloop.last %}, {% endif %}{% endfor %}];
+        const productQuantities = [{% for product in products %}{{ product.quantity }}{% if not forloop.last %}, {% endif %}{% endfor %}];
+        const productSales = [{% for product in products %}{{ product.sales|default:0 }}{% if not forloop.last %}, {% endif %}{% endfor %}];
+
+        // Pie Chart for Sales
+        new Chart(document.getElementById('salesPieChart'), {
+            type: 'pie',
+            data: {
+                labels: productNames,
+                datasets: [{
+                    label: 'Sales',
+                    data: productSales,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.7)',
+                        'rgba(54, 162, 235, 0.7)',
+                        'rgba(255, 206, 86, 0.7)',
+                        'rgba(75, 192, 192, 0.7)',
+                        'rgba(153, 102, 255, 0.7)',
+                        'rgba(255, 159, 64, 0.7)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+        // Bar Chart for Quantities
+        new Chart(document.getElementById('quantityBarChart'), {
+            type: 'bar',
+            data: {
+                labels: productNames,
+                datasets: [{
+                    label: 'Quantity',
+                    data: productQuantities,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.7)',
+                        'rgba(54, 162, 235, 0.7)',
+                        'rgba(255, 206, 86, 0.7)',
+                        'rgba(75, 192, 192, 0.7)',
+                        'rgba(153, 102, 255, 0.7)',
+                        'rgba(255, 159, 64, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    yAxes: [{
+                        ticks: { beginAtZero: true }
+                    }]
+                }
+            }
+        });
+    </script>
+
+<!--End Graphs-->
+    {% else %}
+   {% include 'dashboard/staff_index.html' %}
+    {% endif %}   
+{% endblock %}

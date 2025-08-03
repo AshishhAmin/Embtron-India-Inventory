@@ -1,0 +1,50 @@
+{% extends 'partials/base.html' %}
+{% block title %}Login Page{% endblock %}
+{% load crispy_forms_tags %}
+{% load socialaccount %}
+
+{% block content %}
+<div class="row my-4" style="margin-top: 30px;">
+    <div class="col-md-6 offset-md-3">
+        <div class="border p-3 bg-white login-card" style="margin-top: 50px;height: auto;border-radius: 30px;box-shadow: 10px;">
+            <h4>Login Page</h4>
+            <hr>
+            <form method="POST">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <input class="btn btn-success" type="submit" value="Login">
+            </form>
+            <hr>
+            <div class="text-center my-2" style="font-weight:bold;">OR</div>
+            <a href="{% provider_login_url 'google' %}" class="btn btn-danger btn-block mt-2">
+                <i class="fab fa-google"></i> Login with Google
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    ...
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const loginForm = document.querySelector('form');
+            if (loginForm) {
+                loginForm.addEventListener('submit', function (event) {
+                    event.preventDefault();
+                    document.body.classList.add('fade-out');
+                    setTimeout(() => {
+                        loginForm.submit();
+                    }, 500); // Match the duration of the fadeOut animation
+                });
+            }
+        });
+    </script>
+    ...
+</head>
+<body class="fade-in">
+    ...
+</body>
+</html>

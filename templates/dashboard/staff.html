@@ -1,0 +1,40 @@
+{% extends 'partials/base.html' %}
+{% block title %}Staff page {% endblock %}
+
+{% block content %}
+
+{% include 'partials/topnav.html' %}
+  <!--Table-->
+  <div class="container"style="border-radius: 30px;">
+    <div class="row my-4" style="border-radius: 30px;">
+        <div class="col-md-4" style="border-radius: 30px;"></div>
+       
+            <table class="table bg-white"style="border-radius: 30px;">
+                <thead class="bg-info"style="border-radius: 30px;">
+                    <tr class="text-white">
+                        <th scope="col"style="background-color:rgb(22, 28, 77);"></th>
+                        <th scope="col"style="background-color:rgb(22, 28, 77);">Name</th>
+                        <th scope="col"style="background-color:rgb(22, 28, 77);">Email</th>
+                        <th scope="col"style="background-color:rgb(22, 28, 77);">Phone no.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for worker in workers %}
+                    <tr>
+                        <th scope="row"style="background-color:rgb(22, 28, 77);"><a class="btn btn-light btn-sm" href="{% url 'dashboard-staff-detail' worker.id %}">View</a></th>
+                        <td>{{ worker.username }}</td>
+                        <td>{{ worker.email }}</td>
+                        <td>{{ worker.profile.phone }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+
+
+<!--End Table-->
+    {% endblock %}

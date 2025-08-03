@@ -1,0 +1,138 @@
+{% load crispy_forms_tags %}
+
+
+<div class="container">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} fade show" role="alert" id="message-{{ forloop.counter }}">
+        {{ message }}
+    </div>
+    {% endfor %}
+
+    <div>
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header" style="background-color:rgb(20, 28, 77);;">
+                        Order Request
+                    </div>
+                    <div class="card-body">
+                        <form method="POST">
+                            {% csrf_token %}
+                            {{ form|crispy }}
+<input class="btn btn-block" style="background-color: rgb(217, 225, 239);" type="submit" value="Make Request">                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header text-white rounded-top" style="background-color:rgb(20, 28, 77);;text-align: center;">
+                        Product Records
+                    </div>
+                    <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                        <table class="table" style="border-radius: 15px;">
+                            <thead
+                                style="position: sticky;color: black; top: 0; z-index: 2;background-color: rgb(183, 183, 246);">
+                                <tr>
+                                    <th style="position: sticky; top: 0; z-index: 2;background-color:rgb(20, 28, 77);" class=" text-white">Name
+                                    </th>
+                                    <th style="position: sticky; top: 0; z-index: 2;background-color: rgb(20, 28, 77);" class=" text-white">
+                                        Category</th>
+                                    <th style="position: sticky; top: 0; z-index: 2;background-color: rgb(20, 28, 77);" class=" text-white">
+                                        Quantity</th>
+                                    <th style="position: sticky; top: 0; z-index: 2;background-color: rgb(20, 28, 77);" class=" text-white">
+                                        Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in products %}
+                                <tr>
+                                    <td>{{ product.name }}</td>
+                                    <td>{{ product.category }}</td>
+                                    <td>{{ product.quantity }}</td>
+                                    <td>₹{{ product.price }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header" style="background-color: rgb(20, 28, 77);;text-align: center;">
+                        Orders Records
+                    </div>
+                    <div class="card-body bg-light">
+                        <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                            <table class="table bg-light table-bordered">
+                                <thead style="background-color: blue;">
+                                    <tr>
+                                        <th
+                                            style="position: sticky; top: 0; z-index: 2; background-color: rgb(20, 28, 77);; color: #fff;">
+                                            Product</th>
+                                        <th
+                                            style="position: sticky; top: 0; z-index: 2; background-color: rgb(20, 28, 77);; color: #fff;">
+                                            Category</th>
+                                        <th
+                                            style="position: sticky; top: 0; z-index: 2; background-color: rgb(20, 28, 77);; color: #fff;">
+                                            Quantity</th>
+                                        <th
+                                            style="position: sticky; top: 0; z-index: 2; background-color: rgb(20, 28, 77);; color: #fff;">
+                                            Total Price</th>
+                                        <th
+                                            style="position: sticky; top: 0; z-index: 2; background-color: rgb(20, 28, 77);; color: #fff;">
+                                            Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="order-table-body">
+                                    {% for order in orders %}
+                                    {% if order.staff == user %}
+                                    <tr>
+                                        <td>{{ order.product.name }}</td>
+                                        <td>{{ order.product.category }}</td>
+                                        <td>{{ order.order_quantity }}</td>
+                                        <td class="order-total-price">₹{{ order.total_price }}</td>
+                                        <td>{{ order.date }}</td>
+                                    </tr>
+                                    {% endif %}
+                                    {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            var categorySelect = document.getElementById('id_category');
+            var productSelect = document.getElementById('id_product');
+
+            categorySelect.addEventListener('change', function () {
+                var category = categorySelect.value;
+
+                // Make an AJAX request to fetch products for the selected category
+                fetch(`/product/${category}/`)  // Endpoint to fetch products based on category
+                    .then(response => response.json())
+                    .then(data => {
+                        // Clear the current products in the product dropdown
+                        productSelect.innerHTML = '';
+
+                        // Add the new products to the dropdown
+                        data.products.forEach(function (product) {
+                            var option = document.createElement('option');
+                            option.value = product.id;
+                            option.textContent = product.name;
+                            productSelect.appendChild(option);
+                        });
+                    })
+                    .catch(function (error) {
+                        console.error('Error fetching products:', error);
+                    });
+            });
+        });
+    </script>

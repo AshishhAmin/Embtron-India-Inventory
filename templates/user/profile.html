@@ -1,0 +1,87 @@
+{% extends 'partials/base.html' %}
+{% block title %}Profile Page{% endblock %}
+{% load crispy_forms_tags %}
+
+{% block content%}
+<!--Table-->
+<div class="container">
+    <div class="row my-4 justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h5>Profile Information</h5>
+                            <a class="btn btn-sm float-right"  style="background-color: rgb(22, 28, 77); color: white;"href="{% url 'user-profile-update' %}">Edit</a>
+                            <hr>
+                            <table class="table bg-white table-borderless">
+                                <tbody>
+                                    <tr>
+    <th scope="row" class="text-white" style="background-color: rgb(22, 28, 77);">Name</th>
+    <td>
+        {% if user.username %}
+            {{ user.username }}
+        {% elif user.socialaccount_set.first %}
+            {{ user.socialaccount_set.first.extra_data.name|default:user.socialaccount_set.first.extra_data.given_name|default:"No username found" }}
+        {% else %}
+            <span class="text-danger">No username found</span>
+        {% endif %}
+    </td>
+</tr>
+                                    <tr>
+    <th scope="row" class="text-white" style="background-color: rgb(22, 28, 77);">Email</th>
+    <td>
+        {% if user.email %}
+            {{ user.email }}
+        {% elif user.emailaddress_set.all %}
+            {% for email_obj in user.emailaddress_set.all %}
+                {{ email_obj.email }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        {% else %}
+            <span class="text-danger">No email found</span>
+        {% endif %}
+    </td>
+</tr>
+                                    <tr>
+                                        <th scope="row"class=" text-white" style="background-color: rgb(22, 28, 77);">Phone</th>
+                                        <td>{{ user.profile.phone }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row"class=" text-white"style="background-color: rgb(22, 28, 77);">Address</th>
+                                        <td>{{ user.profile.address }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-4">
+                            <img class="img-thumbnail" src="{{ user.profile.image.url }}" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .container {
+        max-width: auto; /* Set a max width for the container */
+        margin: auto; /* Center the container */
+    }
+    .card {
+        border-radius: 10px; /* Rounded corners for the card */
+    }
+    .card-header {
+        border-bottom: 2px solid #007bff; /* A bottom border for the header */
+    }
+    .table th {
+        background-color: #63d2ee; /* Light background for table headers */
+    }
+    .img-thumbnail {
+        max-width: 100%; /* Ensure the image is responsive */
+        height: auto; /* Maintain aspect ratio */
+    }
+</style>
+<!--End Table-->
+
+{% endblock %}
