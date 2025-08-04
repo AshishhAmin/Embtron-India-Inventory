@@ -25,7 +25,7 @@ def index(request):
             'name': product.name,
             'quantity': product.quantity,
             'sales': sales,
-            'price': product.price,
+            #'price': product.price,
             'category': product.category.name if hasattr(product.category, 'name') else product.category  # Add this line
         })
 
@@ -179,7 +179,7 @@ def import_products(request):
                     name=row['name'],
                     category=row['category'],
                     quantity=row['quantity'],
-                    price=row['price'],
+                    # price=row['price'],
                     location_id=row.get('location_id', '')
                 )
             messages.success(request, 'Products imported successfully!')

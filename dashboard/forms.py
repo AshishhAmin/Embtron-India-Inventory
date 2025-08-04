@@ -7,13 +7,14 @@ class CsvImportForm(forms.Form):
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['name', 'category', 'quantity', 'price','location_id']
+        fields = ['name', 'category', 'quantity','location_id']
 
 class OrderForm(forms.ModelForm):
     # We define the category field as a ChoiceField to allow selection of categories
     CATEGORY = (
     ('Active', (
         ('Transistors', 'Transistors'),
+        ('Resistor', 'Resistor'),
         ('Diodes', 'Diodes'),
         ('Microcontrollers', 'Microcontrollers'),
         ('OPAMPS', 'OPAMPS'),

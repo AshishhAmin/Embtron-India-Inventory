@@ -10,13 +10,25 @@
         <div class="row">
             <div class="col-md-6 mb-4">
                 <div class="bg-white p-3 rounded shadow pie-div">
-                    <h5 class="text-center">Product Sales</h5>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="text-center mb-0">Product Sales</h5>
+                        <div class="btn-group btn-group-sm" role="group">
+                            <button type="button" class="btn btn-primary active" id="topSalesBtn">Top 5</button>
+                            <button type="button" class="btn btn-outline-primary" id="leastSalesBtn">Least 5</button>
+                        </div>
+                    </div>
                     <canvas id="salesPieChart"></canvas>
                 </div>
             </div>
             <div class="col-md-6 mb-4">
                 <div class="bg-white p-3 rounded shadow chart-div">
-                    <h5 class="text-center">Product Quantity</h5>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="text-center mb-0">Product Quantity</h5>
+                        <div class="btn-group btn-group-sm" role="group">
+                            <button type="button" class="btn btn-primary active" id="topQuantityBtn">Top 5</button>
+                            <button type="button" class="btn btn-outline-primary" id="leastQuantityBtn">Least 5</button>
+                        </div>
+                    </div>
                     <canvas id="quantityBarChart"></canvas>
                 </div>
             </div>
@@ -24,68 +36,147 @@
     </div>
     <script>
         // Prepare data from Django context
-        const productNames = [{% for product in products %}'{{ product.name }}'{% if not forloop.last %}, {% endif %}{% endfor %}];
-        const productQuantities = [{% for product in products %}{{ product.quantity }}{% if not forloop.last %}, {% endif %}{% endfor %}];
-        const productSales = [{% for product in products %}{{ product.sales|default:0 }}{% if not forloop.last %}, {% endif %}{% endfor %}];
+        const products = [
+            {% for product in products %}
+            {
+                name: '{{ product.name|escapejs }}',
+                quantity: {{ product.quantity }},
+                sales: {{ product.sales|default:0 }}
+            }{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        ];
 
-        // Pie Chart for Sales
-        new Chart(document.getElementById('salesPieChart'), {
-            type: 'pie',
-            data: {
-                labels: productNames,
-                datasets: [{
-                    label: 'Sales',
-                    data: productSales,
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.7)',
-                        'rgba(54, 162, 235, 0.7)',
-                        'rgba(255, 206, 86, 0.7)',
-                        'rgba(75, 192, 192, 0.7)',
-                        'rgba(153, 102, 255, 0.7)',
-                        'rgba(255, 159, 64, 0.7)'
-                    ]
-                }]
-            },
-            options: {
-                responsive: true
-            }
-        });
+        // Filter out products with zero sales/quantity
+        const validProducts = products.filter(p => p.sales > 0 || p.quantity > 0);
 
-        // Bar Chart for Quantities
-        new Chart(document.getElementById('quantityBarChart'), {
-            type: 'bar',
-            data: {
-                labels: productNames,
-                datasets: [{
-                    label: 'Quantity',
-                    data: productQuantities,
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.7)',
-                        'rgba(54, 162, 235, 0.7)',
-                        'rgba(255, 206, 86, 0.7)',
-                        'rgba(75, 192, 192, 0.7)',
-                        'rgba(153, 102, 255, 0.7)',
-                        'rgba(255, 159, 64, 0.7)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    yAxes: [{
-                        ticks: { beginAtZero: true }
+        // Sort products by sales (descending) and take top 5
+        const top5BySales = [...validProducts]
+            .sort((a, b) => b.sales - a.sales)
+            .slice(0, 5);
+
+        // Sort products by quantity (descending) and take top 5
+        const top5ByQuantity = [...validProducts]
+            .sort((a, b) => b.quantity - a.quantity)
+            .slice(0, 5);
+
+        // Sort products by sales (ascending) and take least 5
+        const least5BySales = [...validProducts]
+            .sort((a, b) => a.sales - b.sales)
+            .slice(0, 5);
+
+        // Sort products by quantity (ascending) and take least 5
+        const least5ByQuantity = [...validProducts]
+            .sort((a, b) => a.quantity - b.quantity)
+            .slice(0, 5);
+
+        // Chart instances
+        let salesChart;
+        let quantityChart;
+
+        // Colors for charts
+        const colors = [
+            'rgba(255, 99, 132, 0.7)',
+            'rgba(54, 162, 235, 0.7)',
+            'rgba(255, 206, 86, 0.7)',
+            'rgba(75, 192, 192, 0.7)',
+            'rgba(153, 102, 255, 0.7)'
+        ];
+
+        // Initialize charts
+        function initCharts() {
+            // Sales Pie Chart
+            salesChart = new Chart(document.getElementById('salesPieChart'), {
+                type: 'pie',
+                data: {
+                    labels: top5BySales.map(p => p.name),
+                    datasets: [{
+                        label: 'Sales',
+                        data: top5BySales.map(p => p.sales),
+                        backgroundColor: colors
                     }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Top 5 Products by Sales'
+                        }
+                    }
                 }
-            }
+            });
+
+            // Quantity Bar Chart
+            quantityChart = new Chart(document.getElementById('quantityBarChart'), {
+                type: 'bar',
+                data: {
+                    labels: top5ByQuantity.map(p => p.name),
+                    datasets: [{
+                        label: 'Quantity',
+                        data: top5ByQuantity.map(p => p.quantity),
+                        backgroundColor: colors
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Top 5 Products by Quantity'
+                        }
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: { beginAtZero: true }
+                        }]
+                    }
+                }
+            });
+        }
+
+        // Update sales chart
+        function updateSalesChart(data, title) {
+            salesChart.data.labels = data.map(p => p.name);
+            salesChart.data.datasets[0].data = data.map(p => p.sales);
+            salesChart.options.plugins.title.text = title;
+            salesChart.update();
+        }
+
+        // Update quantity chart
+        function updateQuantityChart(data, title) {
+            quantityChart.data.labels = data.map(p => p.name);
+            quantityChart.data.datasets[0].data = data.map(p => p.quantity);
+            quantityChart.options.plugins.title.text = title;
+            quantityChart.update();
+        }
+
+        // Button event listeners
+        document.getElementById('topSalesBtn').addEventListener('click', function() {
+            this.classList.add('active');
+            document.getElementById('leastSalesBtn').classList.remove('active');
+            updateSalesChart(top5BySales, 'Top 5 Products by Sales');
         });
+
+        document.getElementById('leastSalesBtn').addEventListener('click', function() {
+            this.classList.add('active');
+            document.getElementById('topSalesBtn').classList.remove('active');
+            updateSalesChart(least5BySales, 'Least 5 Products by Sales');
+        });
+
+        document.getElementById('topQuantityBtn').addEventListener('click', function() {
+            this.classList.add('active');
+            document.getElementById('leastQuantityBtn').classList.remove('active');
+            updateQuantityChart(top5ByQuantity, 'Top 5 Products by Quantity');
+        });
+
+        document.getElementById('leastQuantityBtn').addEventListener('click', function() {
+            this.classList.add('active');
+            document.getElementById('topQuantityBtn').classList.remove('active');
+            updateQuantityChart(least5ByQuantity, 'Least 5 Products by Quantity');
+        });
+
+        // Initialize charts when page loads
+        initCharts();
     </script>
 
 <!--End Graphs-->

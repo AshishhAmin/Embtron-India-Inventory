@@ -28,7 +28,7 @@
                             <th scope="col" style="background-color: rgb(22, 28, 77);;">Name</th>
                             <th scope="col" style="background-color: rgb(22, 28, 77);;">Category</th>
                             <th scope="col" style="background-color: rgb(22, 28, 77);;">Quantity</th>
-                            <th scope="col" style="background-color: rgb(22, 28, 77);;">Price</th>
+                            <!-- <th scope="col" style="background-color: rgb(22, 28, 77);;">Price</th> -->
                             <th scope="col" style="background-color: rgb(22, 28, 77);;">Location ID</th> <!-- Added -->
                             <th scope="col" style="background-color: rgb(22, 28, 77);;">Activity</th>
                         </tr>
@@ -39,7 +39,7 @@
                             <td>{{ item.name }}</td>
                             <td>{{ item.category }}</td>
                             <td>{{ item.quantity }}</td>
-                            <td>₹{{ item.price }}</td>
+                            <!-- <td>₹{{ item.price }}</td> -->
                             <td>{{ item.location_id }}</td> <!-- Added -->
                             <td>
                                 <a class="btn btn-info btn-sm" href="{% url 'dashboard-product-update' item.id %}">Edit</a>
